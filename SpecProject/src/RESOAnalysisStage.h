@@ -33,14 +33,18 @@ namespace Specter {
 
 		//For collections of parameters, prefer std::unordered_map or std::map over vector
 		//Better with use of UUIDs for board-channel pairs
-		std::unordered_map<uint32_t, Parameter> sabre;
+		// std::unordered_map<uint32_t, Parameter> sabre;
+		std::unordered_map<uint32_t, Parameter> adc[5];
+		std::unordered_map<uint32_t, Parameter> tdc[3];
+		std::unordered_map<uint32_t, Parameter> mqdc;
+		std::unordered_map<uint32_t, Parameter> mtdc;
 
 		//Create a few variables
-		Variable x1_weight;
-		Variable x2_weight;
+		// Variable x1_weight;
+		// Variable x2_weight;
 
 		//Create a scaler
-		Scaler beamIntegrator;
+		// Scaler beamIntegrator;
 
 		//Define some board-channel ID's that we'll use. The static keyword means that we only need to calculate them once,
 		//constexpr allows us to use them in a switch (and makes them compile time evaluated)

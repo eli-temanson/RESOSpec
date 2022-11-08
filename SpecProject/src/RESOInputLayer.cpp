@@ -113,30 +113,30 @@ namespace Specter {
 		temp = m_masses.FindSymbol(m_residNums[0], m_residNums[1]);
 		m_rxnEqn += temp;
 
-		double theta_rad = m_theta * c_deg2rad; //convert to radians
-		double bfield_t = m_bfield * 0.1; //convert to tesla
-		double Q = targMass + projMass - ejectMass - residMass;
-		//kinematics a la Iliadis p.590
-		double term1 = std::sqrt(projMass * ejectMass * m_beamKE) / (ejectMass + residMass) * std::cos(theta_rad);
-		double term2 = (m_beamKE * (residMass - projMass) + residMass * Q) / (ejectMass + residMass);
+		// double theta_rad = m_theta * c_deg2rad; //convert to radians
+		// double bfield_t = m_bfield * 0.1; //convert to tesla
+		// double Q = targMass + projMass - ejectMass - residMass;
+		// //kinematics a la Iliadis p.590
+		// double term1 = std::sqrt(projMass * ejectMass * m_beamKE) / (ejectMass + residMass) * std::cos(theta_rad);
+		// double term2 = (m_beamKE * (residMass - projMass) + residMass * Q) / (ejectMass + residMass);
 
-		double ejectKE = term1 + std::sqrt(term1 * term1 + term2);
-		ejectKE *= ejectKE;
+		// double ejectKE = term1 + std::sqrt(term1 * term1 + term2);
+		// ejectKE *= ejectKE;
 
-		//momentum
-		double ejectP = std::sqrt(ejectKE * (ejectKE + 2.0 * ejectMass));
+		// //momentum
+		// double ejectP = std::sqrt(ejectKE * (ejectKE + 2.0 * ejectMass));
 
-		//calculate rho from B a la B*rho = (proj. momentum)/(proj. charge)
-		double rho = (ejectP * c_mev2j) / (m_ejectNums[0] * c_e * c_C * bfield_t) * 100.0; //in cm
+		// //calculate rho from B a la B*rho = (proj. momentum)/(proj. charge)
+		// double rho = (ejectP * c_mev2j) / (m_ejectNums[0] * c_e * c_C * bfield_t) * 100.0; //in cm
 
-		double K;
-		K = sqrt(projMass * ejectMass * m_beamKE / ejectKE);
-		K *= std::sin(theta_rad);
+		// double K;
+		// K = sqrt(projMass * ejectMass * m_beamKE / ejectKE);
+		// K *= std::sin(theta_rad);
 
-		double denom = ejectMass + residMass - std::sqrt(projMass * ejectMass * m_beamKE / ejectKE) * std::cos(theta_rad);
+		// double denom = ejectMass + residMass - std::sqrt(projMass * ejectMass * m_beamKE / ejectKE) * std::cos(theta_rad);
 
-		K /= denom;
-		double zshift = -1 * rho * c_spsDisp * c_spsMag * K; //delta-Z in cm
+		// K /= denom;
+		// double zshift = -1 * rho * c_spsDisp * c_spsMag * K; //delta-Z in cm
 		// x1_weight.SetValue((0.5 - zshift / c_wireDist));
 		// x2_weight.SetValue((1.0 - x1_weight.GetValue()));
 	}
