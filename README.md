@@ -1,6 +1,6 @@
 # RESOSpec
 
-## RESOLUT Project for Specter
+## Specter project for the RESOLUT online analysis
 This project requires [Specter](https://github.com/gwm17/Specter)
 
 ## Building 
