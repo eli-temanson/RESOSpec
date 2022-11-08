@@ -5,4 +5,6 @@
 !/SpecProject
 !/CMakeLists.txt
 !/README.md
+!/LICENSE
 !.gitignore
+!.gitattributes
