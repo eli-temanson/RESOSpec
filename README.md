@@ -17,3 +17,5 @@ cmake -DCMAKE_BUILD_TYPE=Release -B .\build
 cd bin
 ./SpecProject
 ```
+
+![Screenshot](SpecProject/Assets/Screenshot.png)
