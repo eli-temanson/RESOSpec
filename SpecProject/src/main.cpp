@@ -5,25 +5,25 @@
 	GWM -- Feb 2022
 */
 #include "Specter.h"
-#include "SPSAnalysisStage.h"
-#include "SPSInputLayer.h"
+#include "RESOAnalysisStage.h"
+#include "RESOInputLayer.h"
 #include <filesystem>
 
 //User application class. Pushes user analysis stages.
-class SPSApp : public Specter::Application
+class RESOApp : public Specter::Application
 {
 public:
-	SPSApp(const Specter::ApplicationArgs& args) :
+	RESOApp(const Specter::ApplicationArgs& args) :
 		Specter::Application(args)
 	{
-		PushLayer(new Specter::SPSInputLayer(m_manager));
+		PushLayer(new Specter::RESOInputLayer(m_manager));
 		//PushLayer(new Navigator::TestServerLayer());
-		PushAnalysisStage(new Specter::SPSAnalysisStage(m_manager));
+		PushAnalysisStage(new Specter::RESOAnalysisStage(m_manager));
 	}
 };
 
 //Define the creation function to make our user application
-Specter::Application* Specter::CreateApplication(const ApplicationArgs& args) { return new SPSApp(args); }
+Specter::Application* Specter::CreateApplication(const ApplicationArgs& args) { return new RESOApp(args); }
 
 //Make sure to initialize log BEFORE creating application.
 int main(int argc, const char** argv)
@@ -32,7 +32,7 @@ int main(int argc, const char** argv)
 	SPEC_TRACE("Logger Initialized!");
 
 	Specter::ApplicationArgs args;
-	args.name = "SPS Specter";
+	args.name = "RESO Specter";
 	if (std::filesystem::current_path().string().find("SpecProject") != std::string::npos)
 		args.runtimePath = ""; //Dont modify runtime path, already points to SpecProject
 	else

@@ -17,7 +17,9 @@
 namespace Specter {
 
 	RESOInputLayer::RESOInputLayer(const SpectrumManager::Ref& manager) :
-		Layer("RESOInputLayer"), x1_weight("x1_weight"), x2_weight("x2_weight"), m_bfield(0.0), m_theta(0.0), m_beamKE(0.0),
+		Layer("RESOInputLayer"), 
+		m_beamKE(0.0),
+		m_recoKE(0.0),
 		m_rxnEqn("")
 	{
 		for (int i = 0; i < 2; i++)
@@ -28,8 +30,8 @@ namespace Specter {
 			m_residNums[i] = 0;
 		}
 
-		manager->BindVariable(x1_weight);
-		manager->BindVariable(x2_weight);
+		// manager->BindVariable(x1_weight);
+		// manager->BindVariable(x2_weight);
 	}
 
 	RESOInputLayer::~RESOInputLayer() {}
@@ -48,9 +50,9 @@ namespace Specter {
 		if (ImGui::Begin("RESO Input"))
 		{
 			//Create widgets for all of our inputs
-			ImGui::InputDouble("Bfield(kG)", &m_bfield, 0.01, 0.1);
-			ImGui::InputDouble("Theta(deg)", &m_theta, 0.1, 1.0);
+			ImGui::InputDouble("RECO KE (MeV)", &m_recoKE, 0.1, 1.0);
 			ImGui::InputDouble("BeamKE(MeV)", &m_beamKE, 0.1, 1.0);
+			
 			ImGui::InputInt2("Target Z,A", m_targNums);
 			ImGui::InputInt2("Projectile Z,A", m_projNums);
 			ImGui::InputInt2("Ejectile Z,A", m_ejectNums);
@@ -62,11 +64,12 @@ namespace Specter {
 			}
 			//Display some info about the internal state
 			ImGui::Text("-------Current Settings-------");
+			ImGui::Text("Reco KE: %f", m_recoKE);
 			ImGui::Text("Reaction Equation: ");
 			ImGui::SameLine();
 			ImGui::Text("%s", m_rxnEqn.c_str());
-			ImGui::Text("X1 Weight: %f", x1_weight.GetValue());
-			ImGui::Text("X2 Weight: %f", x2_weight.GetValue());
+			// ImGui::Text("X1 Weight: %f", x1_weight.GetValue());
+			// ImGui::Text("X2 Weight: %f", x2_weight.GetValue());
 		}
 		ImGui::End();
 	}
@@ -78,18 +81,19 @@ namespace Specter {
 
 		//Calculate residual nucleus from reaction
 		for (int i = 0; i < 2; i++)
+		{
 			m_residNums[i] = m_targNums[i] + m_projNums[i] - m_ejectNums[i];
-		if (m_residNums[0] < 0 || m_residNums[1] <= 0)
-		{
-			SPEC_ERROR("Invalid residual nucleus at RESOInputLayer::UpdateMasses()! ZR: {0} AR: {1}", m_residNums[0], m_residNums[1]);
-			return;
 		}
-
-		if (m_bfield == 0.0 || m_beamKE == 0.0)
-		{
-			SPEC_ERROR("Invaild kinematic settings at RESOInputLayer::UpdateWeights()! BeamKE: {0} Bfield: {1}", m_beamKE, m_bfield);
-			return;
-		}
+		// if (m_residNums[0] < 0 || m_residNums[1] <= 0)
+		// {
+		// 	SPEC_ERROR("Invalid residual nucleus at RESOInputLayer::UpdateMasses()! ZR: {0} AR: {1}", m_residNums[0], m_residNums[1]);
+		// 	return;
+		// }
+		// if (m_bfield == 0.0 || m_beamKE == 0.0)
+		// {
+		// 	SPEC_ERROR("Invaild kinematic settings at RESOInputLayer::UpdateWeights()! BeamKE: {0} Bfield: {1}", m_beamKE, m_bfield);
+		// 	return;
+		// }
 
 		//Obtain masses from the AMDC table
 		double targMass = m_masses.FindMass(m_targNums[0], m_targNums[1]);
@@ -133,7 +137,7 @@ namespace Specter {
 
 		K /= denom;
 		double zshift = -1 * rho * c_spsDisp * c_spsMag * K; //delta-Z in cm
-		x1_weight.SetValue((0.5 - zshift / c_wireDist));
-		x2_weight.SetValue((1.0 - x1_weight.GetValue()));
+		// x1_weight.SetValue((0.5 - zshift / c_wireDist));
+		// x2_weight.SetValue((1.0 - x1_weight.GetValue()));
 	}
 }

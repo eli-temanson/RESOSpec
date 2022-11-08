@@ -34,14 +34,14 @@ namespace Specter {
 	private:
 		void UpdateWeights();
 
-		//Variables for use in analysis
-		Variable x1_weight;
-		Variable x2_weight;
-
 		//UI facing inputs
-		double m_bfield; //kG
-		double m_theta; //deg
+		double m_recoKE; // MeV
 		double m_beamKE; //MeV
+
+		//Variables for use in analysis
+		// Variable x1_weight;
+		// Variable x2_weight;
+
 		//Z, A inputs for reaction nuclei
 		int m_targNums[2];
 		int m_projNums[2];
