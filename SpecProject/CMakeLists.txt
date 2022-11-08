@@ -18,10 +18,10 @@ target_sources(SpecProject PRIVATE
     ./src/main.cpp
     ./src/MassMap.cpp
     ./src/MassMap.h
-    ./src/SPSAnalysisStage.cpp
-    ./src/SPSAnalysisStage.h
-    ./src/SPSInputLayer.cpp
-    ./src/SPSInputLayer.h
+    ./src/RESOAnalysisStage.cpp
+    ./src/RESOAnalysisStage.h
+    ./src/RESOInputLayer.cpp
+    ./src/RESOInputLayer.h
 )
 
 set(THREADS_PREFER_PTHREAD_FLAG On)
