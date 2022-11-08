@@ -1,6 +1,6 @@
 /*
-	SPSAnalysisStage.h
-	Example of a user AnalysisStage. This one is based around the SE-SPS detector system in FoxLab at FSU.
+	RESOAnalysisStage.h
+	Example of a user AnalysisStage. This one is based around the SE-RESO detector system in FoxLab at FSU.
 
 	GWM -- Feb 2022
 */
@@ -8,11 +8,11 @@
 
 namespace Specter {
 
-	class SPSAnalysisStage : public AnalysisStage
+	class RESOAnalysisStage : public AnalysisStage
 	{
 	public:
-		SPSAnalysisStage(const SpectrumManager::Ref& manager);
-		virtual ~SPSAnalysisStage();
+		RESOAnalysisStage(const SpectrumManager::Ref& manager);
+		virtual ~RESOAnalysisStage();
 
 		virtual void AnalyzePhysicsEvent(const SpecEvent& event) override;
 

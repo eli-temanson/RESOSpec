@@ -1,8 +1,8 @@
 /*
-	SPSInputLayer.cpp
+	RESOInputLayer.cpp
 	An example of what a user created layer might look like. This is how one would extend the base editor to have more
 	functionality, specific to their experiment/setup. In this case, we provide inputs for reaction information so that
-	the kinematic shift of the SE-SPS focal plane can be calculated, and weights for tracing particle trajectories are
+	the kinematic shift of the SE-RESO focal plane can be calculated, and weights for tracing particle trajectories are
 	produced for use in analysis (as NavVariables).
 
 	A reminder that these layers should not be that intense. The more work that is shoved into the UI, the less responsive
@@ -11,13 +11,13 @@
 
 	GWM -- Feb 2022
 */
-#include "SPSInputLayer.h"
+#include "RESOInputLayer.h"
 #include "imgui.h"
 
 namespace Specter {
 
-	SPSInputLayer::SPSInputLayer(const SpectrumManager::Ref& manager) :
-		Layer("SPSInputLayer"), x1_weight("x1_weight"), x2_weight("x2_weight"), m_bfield(0.0), m_theta(0.0), m_beamKE(0.0),
+	RESOInputLayer::RESOInputLayer(const SpectrumManager::Ref& manager) :
+		Layer("RESOInputLayer"), x1_weight("x1_weight"), x2_weight("x2_weight"), m_bfield(0.0), m_theta(0.0), m_beamKE(0.0),
 		m_rxnEqn("")
 	{
 		for (int i = 0; i < 2; i++)
@@ -32,20 +32,20 @@ namespace Specter {
 		manager->BindVariable(x2_weight);
 	}
 
-	SPSInputLayer::~SPSInputLayer() {}
+	RESOInputLayer::~RESOInputLayer() {}
 
-	void SPSInputLayer::OnAttach() {}
+	void RESOInputLayer::OnAttach() {}
 
-	void SPSInputLayer::OnDetach() {}
+	void RESOInputLayer::OnDetach() {}
 
-	void SPSInputLayer::OnUpdate(Timestep& step) {}
+	void RESOInputLayer::OnUpdate(Timestep& step) {}
 
-	void SPSInputLayer::OnEvent(Event& event) {}
+	void RESOInputLayer::OnEvent(Event& event) {}
 
-	void SPSInputLayer::OnImGuiRender()
+	void RESOInputLayer::OnImGuiRender()
 	{
 		SPEC_PROFILE_FUNCTION();
-		if (ImGui::Begin("SPS Input"))
+		if (ImGui::Begin("RESO Input"))
 		{
 			//Create widgets for all of our inputs
 			ImGui::InputDouble("Bfield(kG)", &m_bfield, 0.01, 0.1);
@@ -71,7 +71,7 @@ namespace Specter {
 		ImGui::End();
 	}
 
-	void SPSInputLayer::UpdateWeights()
+	void RESOInputLayer::UpdateWeights()
 	{
 		SPEC_PROFILE_FUNCTION();
 		m_rxnEqn = ""; //reset
@@ -81,13 +81,13 @@ namespace Specter {
 			m_residNums[i] = m_targNums[i] + m_projNums[i] - m_ejectNums[i];
 		if (m_residNums[0] < 0 || m_residNums[1] <= 0)
 		{
-			SPEC_ERROR("Invalid residual nucleus at SPSInputLayer::UpdateMasses()! ZR: {0} AR: {1}", m_residNums[0], m_residNums[1]);
+			SPEC_ERROR("Invalid residual nucleus at RESOInputLayer::UpdateMasses()! ZR: {0} AR: {1}", m_residNums[0], m_residNums[1]);
 			return;
 		}
 
 		if (m_bfield == 0.0 || m_beamKE == 0.0)
 		{
-			SPEC_ERROR("Invaild kinematic settings at SPSInputLayer::UpdateWeights()! BeamKE: {0} Bfield: {1}", m_beamKE, m_bfield);
+			SPEC_ERROR("Invaild kinematic settings at RESOInputLayer::UpdateWeights()! BeamKE: {0} Bfield: {1}", m_beamKE, m_bfield);
 			return;
 		}
 

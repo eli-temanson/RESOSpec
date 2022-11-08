@@ -1,8 +1,8 @@
 /*
-	SPSInputLayer.h
+	RESOInputLayer.h
 	An example of what a user created layer might look like. This is how one would extend the base editor to have more
 	functionality, specific to their experiment/setup. In this case, we provide inputs for reaction information so that
-	the kinematic shift of the SE-SPS focal plane can be calculated, and weights for tracing particle trajectories are
+	the kinematic shift of the SE-RESO focal plane can be calculated, and weights for tracing particle trajectories are
 	produced for use in analysis (as Variables).
 
 	A reminder that these layers should not be that intense. The more work that is shoved into the UI, the less responsive
@@ -11,19 +11,19 @@
 
 	GWM -- Feb 2022
 */
-#ifndef SPS_INPUT_LAYER_H
-#define SPS_INPUT_LAYER_H
+#ifndef RESO_INPUT_LAYER_H
+#define RESO_INPUT_LAYER_H
 
 #include "Specter.h"
 #include "MassMap.h"
 
 namespace Specter {
 
-	class SPSInputLayer : public Layer
+	class RESOInputLayer : public Layer
 	{
 	public:
-		SPSInputLayer(const SpectrumManager::Ref& manager);
-		~SPSInputLayer();
+		RESOInputLayer(const SpectrumManager::Ref& manager);
+		~RESOInputLayer();
 
 		virtual void OnAttach() override;
 		virtual void OnDetach() override;

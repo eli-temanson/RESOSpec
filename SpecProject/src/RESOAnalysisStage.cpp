@@ -1,17 +1,30 @@
 /*
-	SPSAnalysisStage.cpp
-	Example of a user AnalysisStage. This one is based around the SE-SPS detector system in FoxLab at FSU.
+	RESOAnalysisStage.cpp
+	Example of a user AnalysisStage. This one is based around the SE-RESO detector system in FoxLab at FSU.
 
 	GWM -- Feb 2022
 */
-#include "SPSAnalysisStage.h"
+#include "RESOAnalysisStage.h"
 
 namespace Specter {
 
 	//Construct each NavParameter with their unique name. Then bind them to the SpectrumManager.
-	SPSAnalysisStage::SPSAnalysisStage(const SpectrumManager::Ref& manager) :
-		AnalysisStage("SPSAnalysis"), delayFLTime("delayFLTime"), delayFRTime("delayFRTime"), delayBLTime("delayBLTime"), delayBRTime("delayBRTime"), x1("x1"), x2("x2"), xavg("xavg"),
-		scintLeft("scintLeft"), anodeBack("anodeBack"), anodeFront("anodeFront"), cathode("cathode"), xavg_sabreCoinc("xavg_sabreCoinc"), x1_weight("x1_weight"), x2_weight("x2_weight"),
+	RESOAnalysisStage::RESOAnalysisStage(const SpectrumManager::Ref& manager) :
+		AnalysisStage("RESOAnalysis"), 
+		delayFLTime("delayFLTime"), 
+		delayFRTime("delayFRTime"), 
+		delayBLTime("delayBLTime"), 
+		delayBRTime("delayBRTime"),
+		x1("x1"), 
+		x2("x2"), 
+		xavg("xavg"),
+		scintLeft("scintLeft"), 
+		anodeBack("anodeBack"), 
+		anodeFront("anodeFront"), 
+		cathode("cathode"), 
+		xavg_sabreCoinc("xavg_sabreCoinc"), 
+		x1_weight("x1_weight"), 
+		x2_weight("x2_weight"),
 		beamIntegrator("beamIntegrator")
 	{
 		SPEC_PROFILE_FUNCTION();
@@ -61,10 +74,10 @@ namespace Specter {
 		manager->BindScaler(beamIntegrator);
 	}
 
-	SPSAnalysisStage::~SPSAnalysisStage() {}
+	RESOAnalysisStage::~RESOAnalysisStage() {}
 
 	//Do some physics!
-	void SPSAnalysisStage::AnalyzePhysicsEvent(const SpecEvent& event)
+	void RESOAnalysisStage::AnalyzePhysicsEvent(const SpecEvent& event)
 	{
 		SPEC_PROFILE_FUNCTION();
 		//You might want some flags for coincidence cases
