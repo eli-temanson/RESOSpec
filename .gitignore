@@ -1,0 +1,8 @@
+# ignore everything (dirs, files, sub-dirs, sub-files)
+/*
+
+# Do not ignore the following
+!/RESOSpec
+!/CMakeLists.txt
+!/README.md
+!.gitignore
