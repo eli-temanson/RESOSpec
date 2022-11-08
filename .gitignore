@@ -2,7 +2,7 @@
 /*
 
 # Do not ignore the following
-!/RESOSpec
+!/SpecProject
 !/CMakeLists.txt
 !/README.md
 !.gitignore
