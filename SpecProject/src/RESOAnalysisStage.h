@@ -35,7 +35,9 @@ namespace Specter {
 		//Better with use of UUIDs for board-channel pairs
 		// std::unordered_map<uint32_t, Parameter> sabre;
 		std::unordered_map<uint32_t, Parameter> adc[5];
-		std::unordered_map<uint32_t, Parameter> tdc[3];
+		int adc_geo[5] = {4,11,12,13,14};
+		std::unordered_map<uint32_t, Parameter> tdc[4];
+		int tdc_geo[5] = {6,7,8,9};
 		std::unordered_map<uint32_t, Parameter> mqdc;
 		std::unordered_map<uint32_t, Parameter> mtdc;
 

@@ -50,7 +50,7 @@ namespace Specter {
 		//This is kind of a really simple example of injecting a channel map; more complicated and advanced versions could involve reading
 		//a text file to get detector ID information, detector channel number, etc.
 		std::vector<std::string> adc_list[5]; //list of names will allow us to create a summary histogram.
-		std::vector<std::string> tdc_list[3]; //list of names will allow us to create a summary histogram.
+		std::vector<std::string> tdc_list[4]; //list of names will allow us to create a summary histogram.
 		std::vector<std::string> mqdc_list; //list of names will allow us to create a summary histogram.
 		std::vector<std::string> mtdc_list; //list of names will allow us to create a summary histogram.
 		
@@ -74,8 +74,21 @@ namespace Specter {
 			{
 				//spdlog comes prepackaged with the fmt library, so make good use of it!
 				adc_list[index].push_back(fmt::format("adc_{}_{}",index,channel));
-				uuid = Utilities::GetBoardChannelUUID(04, channel);
+				uuid = Utilities::GetBoardChannelUUID(adc_geo[index], channel);
 				board[uuid] = Parameter(adc_list[index].back());
+				manager->BindParameter(board[uuid]);
+			}
+			++index;
+		}
+		index = 0; // start at index 1
+		for (auto& board : tdc)
+		{
+			for (uint32_t channel = 0; channel < 16; channel++)
+			{
+				//spdlog comes prepackaged with the fmt library, so make good use of it!
+				tdc_list[index].push_back(fmt::format("tdc_{}_{}",index,channel));
+				uuid = Utilities::GetBoardChannelUUID(tdc_geo[index], channel);
+				board[uuid] = Parameter(tdc_list[index].back());
 				manager->BindParameter(board[uuid]);
 			}
 			++index;
@@ -84,6 +97,17 @@ namespace Specter {
 		//If you want to make a histogram default available, you can add one like this.
 		// manager->AddHistogramSummary(HistogramArgs("sabre_summary", "", 512, 0.0, 16384), sabre_list);
 		manager->AddHistogramSummary(HistogramArgs("adc1_summary", "", 1024, 0.0, 4096), adc_list[0]);
+		manager->AddHistogramSummary(HistogramArgs("adc2_summary", "", 1024, 0.0, 4096), adc_list[1]);
+		manager->AddHistogramSummary(HistogramArgs("adc3_summary", "", 1024, 0.0, 4096), adc_list[2]);
+		manager->AddHistogramSummary(HistogramArgs("adc4_summary", "", 1024, 0.0, 4096), adc_list[3]);
+		manager->AddHistogramSummary(HistogramArgs("adc5_summary", "", 1024, 0.0, 4096), adc_list[4]);
+
+		manager->AddHistogramSummary(HistogramArgs("tdc1_summary", "", 1024, 0.0, 4096), tdc_list[0]);
+		manager->AddHistogramSummary(HistogramArgs("tdc2_summary", "", 1024, 0.0, 4096), tdc_list[1]);
+		manager->AddHistogramSummary(HistogramArgs("tdc3_summary", "", 1024, 0.0, 4096), tdc_list[2]);
+		manager->AddHistogramSummary(HistogramArgs("tdc4_summary", "", 1024, 0.0, 4096), tdc_list[3]);
+
+
 
 		//Note that if you save a config, the config rep of this histogram will supercede this version.
 
