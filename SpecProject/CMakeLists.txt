@@ -1,16 +1,24 @@
+cmake_minimum_required(VERSION 3.16)
+
+if(NOT CMAKE_BUILD_TYPE STREQUAL "Release")
+    set(CMAKE_BUILD_TYPE "Debug")
+    message("Building debug")
+else()
+    message("Building release")
+endif()
+
+set(SPECPROJECT_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
+set(SPECTER_PATH /dev/Specter)
+set(SPECTER_CONFIG_PATH ${SPECTER_PATH}/lib/cmake)
+
+
+# Use this to find Specter and its libraries. Specify the path to the Specter/lib 
+# Specter/lib/cmake dir after the PATHS keyword (handles windows/linux usecases)
+find_package(Specter REQUIRED PATHS ${SPECTER_PATH}/lib ${SPECTER_PATH}/lib/cmake)
 
 add_executable(SpecProject)
 
-target_include_directories(SpecProject
-    SYSTEM PUBLIC ../Specter/vendor/asio/asio/include
-    PUBLIC ../Specter/vendor/imgui
-    ../Specter/vendor/implot
-    ../Specter/vendor/glad/include
-    ../Specter/vendor/glfw/include
-    ../Specter/vendor/glm
-    ../Specter/vendor/IconFontCppHeaders
-    ../Specter/vendor/spdlog/include
-    ../Specter/src/
+target_include_directories(SpecProject PUBLIC
     ./src
 )
 
@@ -24,28 +32,23 @@ target_sources(SpecProject PRIVATE
     ./src/RESOInputLayer.h
 )
 
-set(THREADS_PREFER_PTHREAD_FLAG On)
-find_package(Threads REQUIRED)
-target_link_libraries(SpecProject PRIVATE Specter Threads::Threads glad glfw imgui)
 
-if(APPLE)
-    target_link_libraries(SpecProject PRIVATE "-framework Cocoa" "-framework CoreVideo" "-framework IOKit" "-framework OpenGL" "-framework Carbon" ${CMAKE_DL_LIBS})
-    target_compile_definitions(SpecProject PRIVATE SPEC_APPLE)
-elseif(UNIX)
-    target_link_libraries(SpecProject PRIVATE libGL.so libX11.so ${CMAKE_DL_LIBS})
-    target_compile_definitions(SpecProject PRIVATE SPEC_LINUX)
-elseif(MSVC)
-    target_link_libraries(SpecProject PRIVATE opengl32.lib)
-    target_compile_definitions(SpecProject PRIVATE SPEC_WINDOWS)
+target_link_libraries(SpecProject PRIVATE Specter::Specter)
+set_target_properties(SpecProject PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${SPECPROJECT_BINARY_DIR})
+
+
+if(NOT EXISTS "${SPECPROJECT_BINARY_DIR}/Assets")
+    if(MSVC)
+        add_custom_command(TARGET SpecProject
+            POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${CMAKE_CURRENT_SOURCE_DIR}/Assets
+            ${SPECPROJECT_BINARY_DIR}/Assets
+        )
+    else()
+        add_custom_command(TARGET SpecProject
+            POST_BUILD COMMAND ${CMAKE_COMMAND} -E create_symlink
+            ${CMAKE_CURRENT_SOURCE_DIR}/Assets
+            ${SPECPROJECT_BINARY_DIR}/Assets
+        )
+    endif()
 endif()
-
-if(CMAKE_BUILD_TYPE STREQUAL "Release")
-    target_compile_definitions(SpecProject PRIVATE SPEC_RELEASE)
-elseif(CMAKE_BUILD_TYPE STREQUAL "Debug")
-    target_compile_definitions(SpecProject PRIVATE SPEC_DEBUG)
-endif()
-
-set_target_properties(SpecProject PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${SPECTER_BINARY_DIR})
-
-#No longer needed, but maybe come back if I don't like the programatic solution
-#add_custom_command(TARGET SpecProject POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${CMAKE_CURRENT_SOURCE_DIR}/Assets ${SPECTER_BINARY_DIR}/Assets)
