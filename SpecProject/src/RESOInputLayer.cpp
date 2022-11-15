@@ -18,8 +18,10 @@ namespace Specter {
 
 	RESOInputLayer::RESOInputLayer(const SpectrumManager::Ref& manager) :
 		Layer("RESOInputLayer"), 
-		m_beamKE(0.0),
-		m_recoKE(0.0),
+		m_beam_tke(0.0),
+		m_frag_tke(0.0),
+		beam_tke("beam_tke"),
+		frag_tke("frag_tke"),
 		m_rxnEqn("")
 	{
 		for (int i = 0; i < 2; i++)
@@ -30,8 +32,8 @@ namespace Specter {
 			m_residNums[i] = 0;
 		}
 
-		// manager->BindVariable(x1_weight);
-		// manager->BindVariable(x2_weight);
+		manager->BindVariable(beam_tke);
+		manager->BindVariable(frag_tke);
 	}
 
 	RESOInputLayer::~RESOInputLayer() {}
@@ -50,21 +52,23 @@ namespace Specter {
 		if (ImGui::Begin("RESO Input"))
 		{
 			//Create widgets for all of our inputs
-			ImGui::InputDouble("RECO KE (MeV)", &m_recoKE, 0.1, 1.0);
-			ImGui::InputDouble("BeamKE(MeV)", &m_beamKE, 0.1, 1.0);
+			ImGui::InputDouble("Beam TKE (MeV)", &m_beam_tke, 0.1, 1.0);
+			ImGui::InputDouble("Frag. TKE (MeV)", &m_frag_tke, 0.1, 1.0);
 			
 			ImGui::InputInt2("Target Z,A", m_targNums);
-			ImGui::InputInt2("Projectile Z,A", m_projNums);
+			ImGui::InputInt2("Beam Z,A", m_projNums);
 			ImGui::InputInt2("Ejectile Z,A", m_ejectNums);
+			
 			if (ImGui::Button("Set"))
 			{
 				//We dont want to calculate the weights every frame, so
 				//we lock that calculation behind a button.
-				UpdateWeights();
+				UpdateValues();
 			}
 			//Display some info about the internal state
 			ImGui::Text("-------Current Settings-------");
-			ImGui::Text("Reco KE: %f", m_recoKE);
+			ImGui::Text("Beam. TKE: %f", beam_tke.GetValue());
+			ImGui::Text("Frag. TKE: %f", frag_tke.GetValue());
 			ImGui::Text("Reaction Equation: ");
 			ImGui::SameLine();
 			ImGui::Text("%s", m_rxnEqn.c_str());
@@ -74,7 +78,7 @@ namespace Specter {
 		ImGui::End();
 	}
 
-	void RESOInputLayer::UpdateWeights()
+	void RESOInputLayer::UpdateValues()
 	{
 		SPEC_PROFILE_FUNCTION();
 		m_rxnEqn = ""; //reset
@@ -100,8 +104,7 @@ namespace Specter {
 		double projMass = m_masses.FindMass(m_projNums[0], m_projNums[1]);
 		double ejectMass = m_masses.FindMass(m_ejectNums[0], m_ejectNums[1]);
 		double residMass = m_masses.FindMass(m_residNums[0], m_residNums[1]);
-		if (targMass == 0.0 || projMass == 0.0 || ejectMass == 0.0 || residMass == 0.0)
-			return;
+		if (targMass == 0.0 || projMass == 0.0 || ejectMass == 0.0 || residMass == 0.0) return;
 
 		std::string temp;
 		temp = m_masses.FindSymbol(m_targNums[0], m_targNums[1]);
@@ -113,31 +116,10 @@ namespace Specter {
 		temp = m_masses.FindSymbol(m_residNums[0], m_residNums[1]);
 		m_rxnEqn += temp;
 
-		// double theta_rad = m_theta * c_deg2rad; //convert to radians
-		// double bfield_t = m_bfield * 0.1; //convert to tesla
-		// double Q = targMass + projMass - ejectMass - residMass;
-		// //kinematics a la Iliadis p.590
-		// double term1 = std::sqrt(projMass * ejectMass * m_beamKE) / (ejectMass + residMass) * std::cos(theta_rad);
-		// double term2 = (m_beamKE * (residMass - projMass) + residMass * Q) / (ejectMass + residMass);
 
-		// double ejectKE = term1 + std::sqrt(term1 * term1 + term2);
-		// ejectKE *= ejectKE;
+		// 
+		beam_tke.SetValue(m_beam_tke);
+		frag_tke.SetValue(m_frag_tke);
 
-		// //momentum
-		// double ejectP = std::sqrt(ejectKE * (ejectKE + 2.0 * ejectMass));
-
-		// //calculate rho from B a la B*rho = (proj. momentum)/(proj. charge)
-		// double rho = (ejectP * c_mev2j) / (m_ejectNums[0] * c_e * c_C * bfield_t) * 100.0; //in cm
-
-		// double K;
-		// K = sqrt(projMass * ejectMass * m_beamKE / ejectKE);
-		// K *= std::sin(theta_rad);
-
-		// double denom = ejectMass + residMass - std::sqrt(projMass * ejectMass * m_beamKE / ejectKE) * std::cos(theta_rad);
-
-		// K /= denom;
-		// double zshift = -1 * rho * c_spsDisp * c_spsMag * K; //delta-Z in cm
-		// x1_weight.SetValue((0.5 - zshift / c_wireDist));
-		// x2_weight.SetValue((1.0 - x1_weight.GetValue()));
 	}
 }

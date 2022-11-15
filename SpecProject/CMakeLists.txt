@@ -8,7 +8,7 @@ else()
 endif()
 
 set(SPECPROJECT_BINARY_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
-set(SPECTER_PATH /dev/Specter)
+set(SPECTER_PATH /data1/Experiments/2022_11_10B+2H/Specter)
 set(SPECTER_CONFIG_PATH ${SPECTER_PATH}/lib/cmake)
 
 

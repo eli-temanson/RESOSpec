@@ -32,15 +32,17 @@ namespace Specter {
 		virtual void OnImGuiRender() override; //"Main" function
 
 	private:
-		void UpdateWeights();
+		void UpdateValues();
 
 		//UI facing inputs
-		double m_recoKE; // MeV
-		double m_beamKE; //MeV
+		double m_frag_tke; // MeV
+		double m_beam_tke; // MeV
 
 		//Variables for use in analysis
 		// Variable x1_weight;
 		// Variable x2_weight;
+		Variable frag_tke; // between UI and analysis
+		Variable beam_tke;
 
 		//Z, A inputs for reaction nuclei
 		int m_targNums[2];
